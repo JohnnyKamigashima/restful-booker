@@ -1,11 +1,10 @@
 import POJO.Booking;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.*;
-
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class johnnyRestfulBookerAPITest {
     String url = "https://restful-booker.herokuapp.com";
     String autorizacaoEndpoint="/auth";
@@ -30,7 +29,7 @@ public class johnnyRestfulBookerAPITest {
                ;
    }
 
-    @BeforeEach
+    @BeforeClass
     public void setUp() {
         booking.setFirstname("Jim");
         booking.setLastname("Brown");
@@ -59,11 +58,11 @@ public class johnnyRestfulBookerAPITest {
                 .statusCode(200)
                 .extract()
                 .path("token");
+
+        System.out.println("O token e " +token);
     }
 
-    @Test
-    @Order(1)
-    @DisplayName("Faz um ping para checar se está funcionando")
+    @Test(priority = 0, description="Faz um ping para checar se está funcionando")
     public void ping() {
         // TODO faz um ping para verificar se está funcionando
         given()
@@ -76,12 +75,11 @@ public class johnnyRestfulBookerAPITest {
 
     }
 
-    @Test
-    @Order(2)
-    @DisplayName("Cria uma conta no resful-booker")
+    @Test(priority=1, description="Cria uma conta no resful-booker")
     public void createBooking() {
         // TODO cria um booking
         String gsonBooking = new Gson().toJson(booking);
+        System.out.println(gsonBooking);
 
         given()
                 .log().all()
@@ -103,9 +101,7 @@ public class johnnyRestfulBookerAPITest {
         ;
     }
 
-       @Test
-       @Order(3)
-         @DisplayName("Verifica o id do booking criado")
+       @Test(priority=2, description="Verifica o id do booking criado")
             public void getBooking() {
                 // TODO verifica o booking criado
                 given()
@@ -125,9 +121,7 @@ public class johnnyRestfulBookerAPITest {
                         .body("additionalneeds", equalTo("Breakfast"));
             }
 
-            @Test
-            @Order(4)
-    @DisplayName("Atualiza o booking criado")
+            @Test(priority=3,description="Atualiza o booking criado")
     public void updateBooking() {
         // TODO atualiza o booking criado
         Booking.BookingDates bookingDates = new Booking.BookingDates();
@@ -158,9 +152,7 @@ public class johnnyRestfulBookerAPITest {
         ;
     }
 
-    @Test
-    @Order(5)
-    @DisplayName("Deleta o booking criado")
+    @Test(priority=4, description  ="Deleta o booking criado")
     public void deleteBooking() {
         // TODO deleta o booking criado
         given()
